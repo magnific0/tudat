@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE( test_RungeKuttaFehlberg56_Integrator_Fehlberg_Benchmark )
     // Integrator settings
     double minimumStepSize   = std::numeric_limits<double>::epsilon() ;
     double maximumStepSize   = std::numeric_limits<double>::infinity() ;
-    double initialStepSize   = 1E-16;
+    double initialStepSize   = 0.1;
     double relativeTolerance = 1E-16;
     double absoluteTolerance = 1E-16;
 
@@ -127,10 +127,12 @@ BOOST_AUTO_TEST_CASE( test_RungeKuttaFehlberg56_Integrator_Fehlberg_Benchmark )
     Eigen::Vector2d numSol = integrator56.integrateTo(finalTime, initialStepSize);
     Eigen::Vector2d anaSol(exp(cos(finalTimeSquared)), exp(sin(finalTimeSquared)));
 
-    Eigen::Vector2d computedDifference = numSol - anaSol;
-    std::cout << computedDifference << std::endl;
-   // std::cout << solution56 << std::endl;
-//    BOOST_CHECK_SMALL( std::fabs(Difference(0)) , 1E-14 ) ;
+    Eigen::Vector2d computedError = numSol - anaSol;
+    Eigen::Vector2d reportedError(1.072E-13, -2.190E-13);
+
+    Eigen::Vector2d difference = computedError - reportedError;
+
+    BOOST_CHECK_SMALL( difference.norm(), 2E-13 ) ;
 
 }
 
